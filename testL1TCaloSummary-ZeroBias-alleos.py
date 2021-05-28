@@ -70,7 +70,7 @@ process.uct2016EmulatorDigis.verbose = cms.bool(False)
 process.uct2016EmulatorDigis.ecalToken = cms.InputTag("l1tCaloLayer1Digis")
 process.uct2016EmulatorDigis.hcalToken = cms.InputTag("l1tCaloLayer1Digis")
 
-process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(17500) )
+process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(-1) )
 
 sourceFileList = open("inputFileList-MINI.txt","r")
 secondaryFileList = open("inputFileList.txt","r")
@@ -121,7 +121,7 @@ process.out = cms.OutputModule("PoolOutputModule",
 #Output
 process.TFileService = cms.Service(
 	"TFileService",
-	fileName = cms.string("/afs/cern.ch/work/a/addropul/l1TNtuple-ZeroBias-testbdt4.root")
+	fileName = cms.string("/afs/cern.ch/work/a/addropul/l1TNtuple-ZeroBias-050121_norecomatch_manybdtstest_fixedl1ptall1.root")
 )
 
 process.p = cms.Path(process.l1tCaloLayer1Digis*process.uct2016EmulatorDigis*process.l1NtupleProducer)

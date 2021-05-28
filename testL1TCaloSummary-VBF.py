@@ -108,7 +108,7 @@ process.out = cms.OutputModule("PoolOutputModule",
 #Output
 process.TFileService = cms.Service(
 	"TFileService",
-	fileName = cms.string("l1TNtuple-VBF-bdttest-34.root")
+	fileName = cms.string("/afs/cern.ch/work/a/addropul/l1TNtuple-VBF_072020_norecomatch_newbdtcuts.root")
 )
 
 process.p = cms.Path(process.l1tCaloLayer1Digis*process.uct2016EmulatorDigis*process.l1NtupleProducer)
