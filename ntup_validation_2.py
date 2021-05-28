@@ -4,21 +4,21 @@ ROOT.gROOT.SetBatch(True)
 import sys, os
 
 #import the ntup
-inFile1 = ROOT.TFile.Open("/afs/cern.ch/user/a/addropul/CMSSW_10_6_0_pre4/src/L1Trigger/Run3Ntuplizer/test/l1TNtuple-VBF-bdttest-34.root","READ")
+inFile1 = ROOT.TFile.Open("/afs/cern.ch/work/a/addropul/public/forAditya/l1TNtuple-VBF_072020_norecomatch_newbdtcuts.root","READ")
 #inFile1 = ROOT.TFile.Open("/afs/cern.ch/work/o/ojalvo/public/forAdriana/l1TNtuple-VBF-bdttest-2.root")#VBF-Htt.root")
 tree = inFile1.Get("l1NtupleProducer/Stage3Regions/efficiencyTree")
 if( not tree ):
     print("Error, could not get input tree")
     
 #inFile2 = ROOT.TFile.Open("/afs/cern.ch/work/a/addropul/l1TNtuple-DY.root ","READ")
-inFile2 = ROOT.TFile.Open("/afs/cern.ch/user/a/addropul/CMSSW_10_6_0_pre4/src/L1Trigger/Run3Ntuplizer/test/l1TNtuple-ZeroBias-testbdt6.root")
+inFile2 = ROOT.TFile.Open("/afs/cern.ch/work/a/addropul/public/forAditya/l1TNtuple-ZeroBias-072020_norecomatch_newbdtcut.root")
 #inFile2 = ROOT.TFile.Open("/afs/cern.ch/work/a/addropul/ZeroBias_all.root")
 tree_zb = inFile2.Get("l1NtupleProducer/Stage3Regions/efficiencyTree")
 if( not tree_zb ):
     print("Error, could not get input tree")
 #tree_zb.Print()
 #stop()
-branch_list = tree.GetListOfBranches()
+branch_list = tree_zb.GetListOfBranches()
 branch_names = [0 for x in range(0,branch_list.GetEntries())]
 for num_branch in range(0,branch_list.GetEntries()):
 	branch_names[num_branch] = branch_list[num_branch].GetName()
@@ -45,9 +45,12 @@ h_l1pt_veryloose_1 = inFile2.Get("l1NtupleProducer/Stage3Regions/l1pt_veryloose_
 h_l1pt_veryloose_2 = inFile2.Get("l1NtupleProducer/Stage3Regions/l1pt_veryloose_2")
 h_l1pt_all_1 = inFile2.Get("l1NtupleProducer/Stage3Regions/l1pt_all_1")
 h_l1pt_all_2 = inFile2.Get("l1NtupleProducer/Stage3Regions/l1pt_all_2")
-
-
-
+print(h_l1pt_all_1.GetEntries())
+print(h_l1pt_all_2.GetEntries())
+print(h_l1pt_veryloose_1.GetEntries())
+print(h_l1pt_loose_1.GetEntries())
+print(h_l1pt_medium_1.GetEntries())
+print(h_l1pt_tight_1.GetEntries())
 #going to make these histograms from events
 h_run = ROOT.TH1F("h_run", "h_run Distribution",20,-8,8)
 h_lumi = ROOT.TH1F("h_lumi", "h_lumi Distribution",20,-8,8)
@@ -82,9 +85,10 @@ h_l1Matched_1 = ROOT.TH1F("h_l1Matched_1", "h_l1Matched_1 Distribution",20,-8,8)
 h_l1Matched_2 = ROOT.TH1F("h_l1Matched_2", "h_l1Matched_2 Distribution",20,-8,8)
 h_nRecoJets = ROOT.TH1F("h_nRecoJets", "h_nRecoJets Distribution",40,0,40)
 h_nL1Jets = ROOT.TH1F("h_nL1Jets", "h_nL1Jets Distribution",20,0,20)
-h_pt1_resolution = ROOT.TH1F("h_pt1_resolution","L1 Pt Resolution Jet 1 Signal",7,-10,10)
-h_pt2_resolution = ROOT.TH1F("h_pt2_resolution","L1 Pt Resolution Jet 2 Signal",7,-10,10)
+h_pt1_resolution = ROOT.TH1F("h_pt1_resolution","L1 Pt Resolution Jet 1 Signal",50,-10,10)
+h_pt2_resolution = ROOT.TH1F("h_pt2_resolution","L1 Pt Resolution Jet 2 Signal",50,-10,10)
 h_bdtDiscriminant = ROOT.TH1F("h_bdtDiscriminant", "h_bdtDisciminant Distribution",20,-1,1)
+h_highest_pt_match = ROOT.TH1F("h_highest_pt_match", "h_highest_pt_match Distribution",5,-2,2)
 
 h_run_zb = ROOT.TH1F("h_run_zb", "h_run Distribution",20,-8,8)
 h_lumi_zb = ROOT.TH1F("h_lumi_zb", "h_lumi Distribution",20,-8,8)
@@ -119,14 +123,46 @@ h_l1Matched_1_zb = ROOT.TH1F("h_l1Matched_1_zb", "h_l1Matched_1 Distribution",20
 h_l1Matched_2_zb = ROOT.TH1F("h_l1Matched_2_zb", "h_l1Matched_2 Distribution",20,-8,8)
 h_nRecoJets_zb = ROOT.TH1F("h_nRecoJets_zb", "h_nRecoJets Distribution",40,0,40)
 h_nL1Jets_zb = ROOT.TH1F("h_nL1Jets_zb", "h_nL1Jets Distribution",20,0,20)
-h_pt1_resolution_zb = ROOT.TH1F("h_pt1_resolution_zb","L1 Pt Resolution Jet 1 Background",7,-10,10)
-h_pt2_resolution_zb = ROOT.TH1F("h_pt2_resolution_zb","L1 Pt Resolution Jet 2 Background",7,-10,10)
+h_pt1_resolution_zb = ROOT.TH1F("h_pt1_resolution_zb","L1 Pt Resolution Jet 1 Background",50,-10,10)
+h_pt2_resolution_zb = ROOT.TH1F("h_pt2_resolution_zb","L1 Pt Resolution Jet 2 Background",50,-10,10)
 h_bdtDiscriminant_zb = ROOT.TH1F("h_bdtDiscriminant_zb", "h_bdtDisciminant Distribution",20,-1,1)
+h_highest_pt_match_zb = ROOT.TH1F("h_highest_pt_match_zb", "h_highest_pt_match Distribution",5,-2,2)
 
+h_l1pt1_vs_l1DeltaEta  = ROOT.TH2F( 'h_l1pt1_vs_l1DeltaEta', 'l1pt1 vs l1DeltaEta', 100, 0, 300, 20, -8, 8 )
+h_l1pt1_vs_l1DeltaEta_zb  = ROOT.TH2F( 'h_l1pt1_vs_l1DeltaEta_zb', 'l1pt1 vs l1DeltaEta', 100, 0, 300, 20, -8, 8 )
+
+h_l1pt2_vs_l1DeltaEta  = ROOT.TH2F( 'h_l1pt2_vs_l1DeltaEta', 'l1pt2 vs l1DeltaEta', 100, 0, 300, 20, -8, 8 )
+h_l1pt2_vs_l1DeltaEta_zb  = ROOT.TH2F( 'h_l1pt2_vs_l1DeltaEta_zb', 'l1pt2 vs l1DeltaEta', 100, 0, 300, 20, -8, 8 )
+
+h_l1pt1_vs_l1DeltaPhi  = ROOT.TH2F( 'h_l1pt1_vs_l1DeltaPhi', 'l1pt1 vs l1DeltaPhi', 100, 0, 300, 20, -8, 8 )
+h_l1pt1_vs_l1DeltaPhi_zb  = ROOT.TH2F( 'h_l1pt1_vs_l1DeltaPhi_zb', 'l1pt1 vs l1DeltaPhi', 100, 0, 300, 20, -8, 8 )
+
+h_l1pt2_vs_l1DeltaPhi  = ROOT.TH2F( 'h_l1pt2_vs_l1DeltaPhi', 'l1pt2 vs l1DeltaPhi', 100, 0, 300, 20, -8, 8 )
+h_l1pt2_vs_l1DeltaPhi_zb  = ROOT.TH2F( 'h_l1pt2_vs_l1DeltaPhi_zb', 'l1pt2 vs l1DeltaPhi', 100, 0, 300, 20, -8, 8 )
+
+h_l1pt1_vs_l1DeltaR  = ROOT.TH2F( 'h_l1pt1_vs_l1DeltaR', 'l1pt1 vs l1DeltaR', 100, 0, 300, 20, -8, 8 )
+h_l1pt1_vs_l1DeltaR_zb  = ROOT.TH2F( 'h_l1pt1_vs_l1DeltaR_zb', 'l1pt1 vs l1DeltaR', 100, 0, 300, 20, -8, 8 )
+
+h_l1pt2_vs_l1DeltaR  = ROOT.TH2F( 'h_l1pt2_vs_l1DeltaR', 'l1pt2 vs l1DeltaR', 100, 0, 300, 20, -8, 8 )
+h_l1pt2_vs_l1DeltaR_zb  = ROOT.TH2F( 'h_l1pt2_vs_l1DeltaR_zb', 'l1pt2 vs l1DeltaR', 100, 0, 300, 20, -8, 8 )
+
+h_l1pt2_vs_bdtdiscrim = ROOT.TH2F( 'h_l1pt2_vs_bdtdiscrim', 'l1pt2 vs bdtDiscriminant', 100, 0, 300, 20, -1, 1 )
+h_l1pt1_vs_bdtdiscrim= ROOT.TH2F( 'h_l1pt1_vs_bdtdiscrim', 'l1pt1 vs bdtDiscriminant', 100, 0, 300, 20, -1, 1 )
+h_l1DeltaEta_vs_bdtdiscrim= ROOT.TH2F( 'h_l1DeltaEta_vs_bdtdiscrim', 'l1DeltaEta vs bdtDiscriminant', 20,-8,8, 20,-1, 1 )
+h_l1DeltaPhi_vs_bdtdiscrim= ROOT.TH2F( 'h_l1DeltaPhi_vs_bdtdiscrim', 'l1DeltaPhi vs bdtDiscriminant', 20,-8,8, 20, -1, 1 )
+h_l1Mass_vs_bdtdiscrim= ROOT.TH2F( 'h_l1Mass_vs_bdtdiscrim', 'l1Mass vs bdtDiscriminant', 1000, 0, 2000, 20, -1, 1 )
+h_l1Mass_vs_absDeltaEta= ROOT.TH2F( 'h_l1Mass_vs_absDeltaEta', 'l1Mass vs abs(DeltaEta)', 1000, 0, 2000, 20, 0, 8 )
+
+h_l1pt2_vs_bdtdiscrim_zb = ROOT.TH2F( 'h_l1pt2_vs_bdtdiscrim_zb', 'l1pt2 vs bdtDiscriminant', 100, 0, 300, 20, -1, 1 )
+h_l1pt1_vs_bdtdiscrim_zb= ROOT.TH2F( 'h_l1pt1_vs_bdtdiscrim_zb', 'l1pt1 vs bdtDiscriminant', 100, 0, 300, 20,-1, 1 )
+h_l1DeltaEta_vs_bdtdiscrim_zb= ROOT.TH2F( 'h_l1DeltaEta_vs_bdtdiscrim_zb', 'l1DeltaEta vs bdtDiscriminant', 20,-8,8, 20, -1, 1 )
+h_l1DeltaPhi_vs_bdtdiscrim_zb= ROOT.TH2F( 'h_l1DeltaPhi_vs_bdtdiscrim_zb', 'l1DeltaPhi vs bdtDiscriminant', 20,-8,8, 20, -1, 1 )
+h_l1Mass_vs_bdtdiscrim_zb= ROOT.TH2F( 'h_l1Mass_vs_bdtdiscrim_zb', 'l1Mass vs bdtDiscriminant', 1000, 0, 2000, 20, -1, 1 )
+h_l1Mass_vs_absDeltaEta_zb= ROOT.TH2F( 'h_l1Mass_vs_absDeltaEta_zb', 'l1Mass vs abs(DeltaEta)', 1000, 0, 2000, 20, 0, 8 )
 for entry_i in range(tree.GetEntries()):
 	tree.GetEntry(entry_i)
-        #if entry_i > 10000:
-        #        break;
+        if (tree.l1DeltaEta < -6) or (tree.l1DeltaEta > 6) :
+                continue;
 	h_run.Fill(tree.run)
 	h_lumi.Fill(tree.lumi)
 	h_event.Fill(tree.event)
@@ -162,10 +198,25 @@ for entry_i in range(tree.GetEntries()):
 	h_pt1_resolution.Fill((tree.l1Pt_1- tree.recoPt_1)/tree.recoPt_1)
 	h_pt2_resolution.Fill((tree.l1Pt_2- tree.recoPt_2)/tree.recoPt_2)
 	h_bdtDiscriminant.Fill(tree.bdtDiscriminant)
+        h_highest_pt_match.Fill(tree.highest_pt_match)
+	h_l1pt1_vs_l1DeltaEta.Fill(tree.l1Pt_1,tree.l1DeltaEta)
+	h_l1pt2_vs_l1DeltaEta.Fill(tree.l1Pt_2,tree.l1DeltaEta)
+	h_l1pt1_vs_l1DeltaPhi.Fill(tree.l1Pt_1,tree.l1DeltaPhi)
+	h_l1pt2_vs_l1DeltaPhi.Fill(tree.l1Pt_2,tree.l1DeltaPhi)
+	h_l1pt1_vs_l1DeltaR.Fill(tree.l1Pt_1,tree.l1DeltaR)
+	h_l1pt2_vs_l1DeltaR.Fill(tree.l1Pt_2,tree.l1DeltaR)  
+	h_l1pt2_vs_bdtdiscrim.Fill(tree.l1Pt_2,tree.bdtDiscriminant)
+        h_l1pt1_vs_bdtdiscrim.Fill(tree.l1Pt_1,tree.bdtDiscriminant)
+        h_l1DeltaPhi_vs_bdtdiscrim.Fill(tree.l1DeltaPhi,tree.bdtDiscriminant)
+        h_l1DeltaEta_vs_bdtdiscrim.Fill(tree.l1DeltaEta,tree.bdtDiscriminant)
+        h_l1Mass_vs_bdtdiscrim.Fill(tree.l1Mass,tree.bdtDiscriminant)
+	h_l1Mass_vs_absDeltaEta.Fill(tree.l1Mass,abs(tree.l1DeltaEta))
 for entry_j in range(tree_zb.GetEntries()):   
 	tree_zb.GetEntry(entry_j)
 	#if entry_j > 20000:
 	#	break; 
+        if (tree_zb.l1DeltaEta < -6) or (tree_zb.l1DeltaEta > 6) :
+                continue;
     	h_run_zb.Fill(tree_zb.run)
 	h_lumi_zb.Fill(tree_zb.lumi)
 	h_event_zb.Fill(tree_zb.event)
@@ -181,12 +232,14 @@ for entry_j in range(tree_zb.GetEntries()):
 	h_recoDeltaPhi_zb.Fill(tree_zb.recoDeltaPhi)
 	h_recoDeltaR_zb.Fill(tree_zb.recoDeltaR)
 	h_recoMass_zb.Fill(tree_zb.recoMass)
-	h_l1Pt_1_zb.Fill(tree_zb.l1Pt_1)
+        if (tree_zb.l1Pt_1 != -99):
+		h_l1Pt_1_zb.Fill(tree_zb.l1Pt_1);
 	#print('qcd '+ str(tree_zb.l1Pt_1))
 	h_l1Eta_1_zb.Fill(tree_zb.l1Eta_1)
 	h_l1Phi_1_zb.Fill(tree_zb.l1Phi_1)
 	h_l1NthJet_1_zb.Fill(tree_zb.l1NthJet_1)
-	h_l1Pt_2_zb.Fill(tree_zb.l1Pt_2)
+        if (tree_zb.l1Pt_2 != -99):
+		h_l1Pt_2_zb.Fill(tree_zb.l1Pt_2)
 	#print('l1Pt2 '+ str(tree_zb.l1Pt_2))
 	h_l1Eta_2_zb.Fill(tree_zb.l1Eta_2)
 	h_l1Phi_2_zb.Fill(tree_zb.l1Phi_2)
@@ -202,8 +255,29 @@ for entry_j in range(tree_zb.GetEntries()):
         h_pt1_resolution_zb.Fill((tree_zb.l1Pt_1- tree_zb.recoPt_1)/tree_zb.recoPt_1)
         h_pt2_resolution_zb.Fill((tree_zb.l1Pt_2- tree_zb.recoPt_2)/tree_zb.recoPt_2)
 	h_bdtDiscriminant_zb.Fill(tree_zb.bdtDiscriminant)
+        h_highest_pt_match_zb.Fill(tree_zb.highest_pt_match)
+        h_l1pt1_vs_l1DeltaEta_zb.Fill(tree_zb.l1Pt_1,tree_zb.l1DeltaEta)
+        h_l1pt2_vs_l1DeltaEta_zb.Fill(tree_zb.l1Pt_2,tree_zb.l1DeltaEta)
+        h_l1pt1_vs_l1DeltaPhi_zb.Fill(tree_zb.l1Pt_1,tree_zb.l1DeltaPhi)
+        h_l1pt2_vs_l1DeltaPhi_zb.Fill(tree_zb.l1Pt_2,tree_zb.l1DeltaPhi)
+        h_l1pt1_vs_l1DeltaR_zb.Fill(tree_zb.l1Pt_1,tree_zb.l1DeltaR)
+        h_l1pt2_vs_l1DeltaR_zb.Fill(tree_zb.l1Pt_2,tree_zb.l1DeltaR)
+	h_l1pt2_vs_bdtdiscrim_zb.Fill(tree_zb.l1Pt_2,tree_zb.bdtDiscriminant)
+        h_l1pt1_vs_bdtdiscrim_zb.Fill(tree_zb.l1Pt_1,tree_zb.bdtDiscriminant)
+	h_l1DeltaPhi_vs_bdtdiscrim_zb.Fill(tree_zb.l1DeltaPhi,tree_zb.bdtDiscriminant)
+        h_l1DeltaEta_vs_bdtdiscrim_zb.Fill(tree_zb.l1DeltaEta,tree_zb.bdtDiscriminant) 
+	h_l1Mass_vs_bdtdiscrim_zb.Fill(tree_zb.l1Mass,tree_zb.bdtDiscriminant)
+	h_l1Mass_vs_absDeltaEta_zb.Fill(tree_zb.l1Mass,abs(tree_zb.l1DeltaEta))
+h_l1Pt_1_zb.Rebin(4)
+h_l1Pt_2_zb.Rebin(4)
+h_l1Pt_1.Rebin(4)
+h_l1Pt_2.Rebin(4)
+h_l1Pt_1.Rebin(2)
+h_l1Pt_2.Rebin(2)
+h_l1Pt_1_zb.Rebin(2)
+h_l1Pt_2_zb.Rebin(2)
 histograms.Write()
-x_axis_labels = ['run','lumi','event','GeV','#eta','#phi','nth jet','GeV','#eta','#phi','nth jet','#Delta#eta','#Delta#phi','#DeltaR','GeV','GeV','#eta','#phi','nth jet','GeV','#eta','#phi','nth jet','#Delta#eta','#Delta#phi','#DeltaR','GeV','l1Matched','l2Matched','num jets','num jets','bdtDicriminant']
+x_axis_labels = ['run','lumi','event','GeV','#eta','#phi','nth jet','GeV','#eta','#phi','nth jet','#Delta#eta','#Delta#phi','#DeltaR','GeV','GeV','#eta','#phi','nth jet','GeV','#eta','#phi','nth jet','#Delta#eta','#Delta#phi','#DeltaR','GeV','l1Matched','l2Matched','num jets','num jets','bdtDicriminant','highest_pt_match']
 for branch_i in range(0, branch_list.GetEntries()):
 	hist_name = 'h_' + str(branch_names[branch_i])
 	hist_name_zb = 'h_' + str(branch_names[branch_i])+'_zb'
@@ -255,7 +329,7 @@ for branch_i in range(0, branch_list.GetEntries()):
          	legend.AddEntry(h_zb,"ZB","l")
 		legend.Draw("same")
 		c1.Update()
-		c1.SaveAs(hist_name + 'bdt.png')
+		c1.SaveAs(hist_name + 'spt.png')
 
 c2 = ROOT.TCanvas()
 h_pt1_resolution_1 = histograms.Get('h_pt1_resolution')
@@ -304,23 +378,26 @@ legend.AddEntry(h_pt1_resolution_zb_1,"Jet 1 Background","l")
 legend.AddEntry(h_pt2_resolution_zb_1,"Jet 2 Background","l")
 legend.Draw("same")
 c2.Update()
-c2.SaveAs('h_resolution_plots_bdt.png')
+c2.SaveAs('h_resolution_plots_spt.png')
 
 c3 = ROOT.TCanvas()
 h_l1Pt_1_zb = histograms.Get('h_l1Pt_1_zb')
+print(h_l1Pt_1_zb.GetEntries())
+print(h_l1Pt_1.GetEntries())
 legend1 = ROOT.TLegend(0.70,0.75,0.9,0.9)
 legend1.SetTextSize(0.03)
 legend1.SetFillStyle(0)
 ROOT.gStyle.SetOptStat(0)
 
+
 h_l1Pt_1_zb.SetTitle('BDT cuts leading jet')
 h_l1Pt_1_zb.GetXaxis().SetTitle("Pt")
 h_l1Pt_1_zb.GetYaxis().SetTitle("Number of Events")
-h_l1Pt_1_zb.SetLineColor(ROOT.kMagenta)
+h_l1Pt_1_zb.SetLineColor(ROOT.kTeal)
 #h_l1Pt_1.Scale(1.0/h_l1Pt_1.Integral())
 h_l1Pt_1_zb.Draw("hist")
 #h_l1Pt_1.GetYaxis().SetRangeUser(0.,1.)
-
+h_l1pt_tight_1.Rebin(2)
 h_l1pt_tight_1.SetTitle('BDT cuts leading jet')
 h_l1pt_tight_1.GetXaxis().SetTitle("Pt")
 h_l1pt_tight_1.GetYaxis().SetTitle("Number of Events")
@@ -328,7 +405,7 @@ h_l1pt_tight_1.SetLineColor(ROOT.kViolet)
 #h_l1pt_tight_1.Scale(1.0/h_l1pt_tight_1.Integral())
 h_l1pt_tight_1.Draw("hist same")
 #h_l1pt_tight_1.GetYaxis().SetRangeUser(0.,1.)
-
+h_l1pt_medium_1.Rebin(2)
 h_l1pt_medium_1.SetTitle('BDT cuts leading jet')
 h_l1pt_medium_1.GetXaxis().SetTitle("Pt")
 h_l1pt_medium_1.GetYaxis().SetTitle("Number of Events")
@@ -336,7 +413,7 @@ h_l1pt_medium_1.SetLineColor(ROOT.kRed)
 #h_l1pt_medium_1.Scale(1.0/h_l1pt_medium_1.Integral())
 h_l1pt_medium_1.Draw("hist same")
 #h_l1pt_medium_1.GetYaxis().SetRangeUser(0.,1.)
-
+h_l1pt_loose_1.Rebin(2)
 h_l1pt_loose_1.SetTitle('BDT cuts leading jet')
 h_l1pt_loose_1.GetXaxis().SetTitle("Pt")
 h_l1pt_loose_1.GetYaxis().SetTitle("Number of Events")
@@ -344,7 +421,7 @@ h_l1pt_loose_1.SetLineColor(ROOT.kBlue)
 #h_l1pt_loose_1.Scale(1.0/h_l1pt_loose_1.Integral())
 h_l1pt_loose_1.Draw("hist same")
 #h_l1pt_loose_1.GetYaxis().SetRangeUser(0.,1.)
-
+h_l1pt_veryloose_1.Rebin(2)
 h_l1pt_veryloose_1.SetTitle('BDT cuts leading jet')
 h_l1pt_veryloose_1.GetXaxis().SetTitle("Pt")
 h_l1pt_veryloose_1.GetYaxis().SetTitle("Number of Events")
@@ -360,12 +437,13 @@ legend1.AddEntry(h_l1pt_veryloose_1,"Very Loose","l")
 legend1.AddEntry(h_l1Pt_1_zb,"All","l")
 legend1.Draw("same")
 c3.Update()
-c3.SaveAs('h_l1pt_1_bdt.png')
+c3.SaveAs('h_l1pt_1_spt.png')
 
 
 ################################################################################
 c4 = ROOT.TCanvas()
 h_l1Pt_2_zb = histograms.Get('h_l1Pt_2_zb')
+print(h_l1Pt_2_zb.GetEntries())
 legend2 = ROOT.TLegend(0.70,0.75,0.9,0.9)
 legend2.SetTextSize(0.03)
 legend2.SetFillStyle(0)
@@ -374,42 +452,32 @@ ROOT.gStyle.SetOptStat(0)
 h_l1Pt_2_zb.SetTitle('BDT cuts subleading jet')
 h_l1Pt_2_zb.GetXaxis().SetTitle("Pt")
 h_l1Pt_2_zb.GetYaxis().SetTitle("Number of Events")
-h_l1Pt_2_zb.SetLineColor(ROOT.kMagenta)
-#h_l1Pt_1.Scale(1.0/h_l1Pt_1.Integral())
+h_l1Pt_2_zb.SetLineColor(ROOT.kTeal)
 h_l1Pt_2_zb.Draw("hist")
-#h_l1Pt_1.GetYaxis().SetRangeUser(0.,1.)
-
+h_l1pt_tight_2.Rebin(2)
 h_l1pt_tight_2.SetTitle('BDT cuts subleading jet')
 h_l1pt_tight_2.GetXaxis().SetTitle("Pt")
 h_l1pt_tight_2.GetYaxis().SetTitle("Number of Events")
 h_l1pt_tight_2.SetLineColor(ROOT.kViolet)
-#h_l1pt_tight_1.Scale(1.0/h_l1pt_tight_1.Integral())
 h_l1pt_tight_2.Draw("hist same")
-#h_l1pt_tight_1.GetYaxis().SetRangeUser(0.,1.)
-
+h_l1pt_medium_2.Rebin(2)
 h_l1pt_medium_2.SetTitle('BDT cuts subleading jet')
 h_l1pt_medium_2.GetXaxis().SetTitle("Pt")
 h_l1pt_medium_2.GetYaxis().SetTitle("Number of Events")
 h_l1pt_medium_2.SetLineColor(ROOT.kRed)
-#h_l1pt_medium_1.Scale(1.0/h_l1pt_medium_1.Integral())
 h_l1pt_medium_2.Draw("hist same")
-#h_l1pt_medium_1.GetYaxis().SetRangeUser(0.,1.)
-
+h_l1pt_loose_2.Rebin(2)
 h_l1pt_loose_2.SetTitle('BDT cuts subleading jet')
 h_l1pt_loose_2.GetXaxis().SetTitle("Pt")
 h_l1pt_loose_2.GetYaxis().SetTitle("Number of Events")
 h_l1pt_loose_2.SetLineColor(ROOT.kBlue)
-#h_l1pt_loose_1.Scale(1.0/h_l1pt_loose_1.Integral())
 h_l1pt_loose_2.Draw("hist same")
-#h_l1pt_loose_1.GetYaxis().SetRangeUser(0.,1.)
-
+h_l1pt_veryloose_2.Rebin(2)
 h_l1pt_veryloose_2.SetTitle('BDT cuts subleading jet')
 h_l1pt_veryloose_2.GetXaxis().SetTitle("Pt")
 h_l1pt_veryloose_2.GetYaxis().SetTitle("Number of Events")
 h_l1pt_veryloose_2.SetLineColor(ROOT.kGreen)
-#h_l1pt_veryloose_1.Scale(1.0/h_l1pt_veryloose_1.Integral())
 h_l1pt_veryloose_2.Draw("hist same")
-#h_l1pt_veryloose_1.GetYaxis().SetRangeUser(0.,1.)
 
 legend2.AddEntry(h_l1pt_tight_2,"Tight","l")
 legend2.AddEntry(h_l1pt_medium_2,"Medium","l")
@@ -418,4 +486,23 @@ legend2.AddEntry(h_l1pt_veryloose_2,"Very Loose","l")
 legend2.AddEntry(h_l1Pt_2_zb,"All","l")
 legend2.Draw("same")
 c4.Update()
-c4.SaveAs('h_l1pt_2_bdt.png')
+c4.SaveAs('h_l1pt_2_spt.png')
+
+##########################################################################################
+twoD_hist_list = ['h_l1pt1_vs_l1DeltaEta','h_l1pt2_vs_l1DeltaEta','h_l1pt1_vs_l1DeltaPhi','h_l1pt2_vs_l1DeltaPhi','h_l1pt1_vs_l1DeltaR','h_l1pt2_vs_l1DeltaR','h_l1pt1_vs_l1DeltaEta_zb','h_l1pt2_vs_l1DeltaEta_zb','h_l1pt1_vs_l1DeltaPhi_zb','h_l1pt2_vs_l1DeltaPhi_zb','h_l1pt1_vs_l1DeltaR_zb','h_l1pt2_vs_l1DeltaR_zb','h_l1pt2_vs_bdtdiscrim','h_l1pt1_vs_bdtdiscrim','h_l1DeltaEta_vs_bdtdiscrim','h_l1DeltaPhi_vs_bdtdiscrim','h_l1Mass_vs_bdtdiscrim','h_l1pt2_vs_bdtdiscrim_zb','h_l1pt1_vs_bdtdiscrim_zb','h_l1DeltaEta_vs_bdtdiscrim_zb','h_l1DeltaPhi_vs_bdtdiscrim_zb','h_l1Mass_vs_bdtdiscrim_zb','h_l1Mass_vs_absDeltaEta','h_l1Mass_vs_absDeltaEta_zb']
+for hist_i in range(0,24):
+	hist_name = str(twoD_hist_list[hist_i])
+	if not(ROOT.gDirectory.FindObject(hist_name)):
+                continue;
+	else:
+		print(hist_name)
+		h = histograms.Get(hist_name)
+		h.SetDirectory(0)
+		c5 = ROOT.TCanvas()
+		ROOT.gStyle.SetOptStat(0)
+		h.SetTitle(twoD_hist_list[hist_i] + ' Distribution')
+        	#h.GetXaxis().SetTitle(x_axis_labels[branch_i])
+        	#h.GetYaxis().SetTitle("Number of events")
+		h.Draw("hist")
+	c5.Update()
+	c5.SaveAs(hist_name + '.png')
